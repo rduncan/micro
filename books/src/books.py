@@ -1,6 +1,7 @@
 import json
 from flask import Flask,jsonify
 from flask_sqlalchemy import SQLAlchemy
+from marshmallow import Schema, fields
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/testdb'
@@ -16,6 +17,12 @@ class Book(db.Model):
     def __repr__(self):
         return '<Book %r>' % self.title
 
+class BookSchema(Schema):
+    id = fields.Integer()
+    title = fields.String()
+    author = fields.Integer()
+
+
 @app.route('/')
 def index():
     return json.dumps({'name': 'alicex',
@@ -24,7 +31,8 @@ def index():
 @app.route('/api/books', methods=['GET'])
 def get_all_books():
     books = Book.query.all()
-    return jsonify(books)
+    schema = BookSchema()
+    return jsonify( [ schema.dump(b) for b in books])
 
 if __name__ == '__main__':
         script_name = __file__
