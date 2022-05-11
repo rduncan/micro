@@ -1,0 +1,30 @@
+version: "2.4"
+
+services:
+  db:
+    image: "postgres:14"
+    restart: "no"
+    environment:
+      POSTGRES_USERNAME: "postgres"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "testdb"
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  flyway:
+    image: "flyway/flyway:8.5.10"
+    command: "-url=jdbc:postgresql://db:5432/testdb -user=postgres -password=password migrate"
+    volumes:
+      - ../flyway/sql:/flyway/sql
+    depends_on:
+      db:
+        condition: service_healthy
+
+
+
+
+
