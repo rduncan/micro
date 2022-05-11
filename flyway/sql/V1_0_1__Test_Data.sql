@@ -10,4 +10,4 @@ INSERT INTO books(id, title, author)
     VALUES(1, 'Skin Game', 1);
 
 INSERT INTO books(id, title, author)
-    VALUES(1, 'IT', 2);
+    VALUES(2, 'IT', 2);

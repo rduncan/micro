@@ -1,5 +1,4 @@
-#
-# top level requirements 
-#
 Flask==2.1.2
 Flask-SQLAlchemy==2.5.1
+psycopg2-binary==2.9.3
+
