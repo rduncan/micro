@@ -1,8 +1,10 @@
+from email import message
 import json
 from flask import Flask,request
 from flask_sqlalchemy import SQLAlchemy
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, abort
 from marshmallow import Schema, fields, post_load
+from http import HTTPStatus
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/testdb'
@@ -45,8 +47,11 @@ api.add_resource(BookListResource, '/api/books')
 class BookResource(Resource):
     def get(self, id):
         book = Book.query.filter_by(id=id).first()
-        schema = BookSchema()
-        return schema.dump(book)
+        if book == None:
+            abort(HTTPStatus.NOT_FOUND, message="book not found")
+        else:
+            schema = BookSchema()
+            return schema.dump(book)
 
 api.add_resource(BookResource, '/api/books/<int:id>')
 
